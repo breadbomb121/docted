@@ -2,10 +2,13 @@ mod notes;
 mod cli;
 mod docted;
 mod web;
+mod doc;
+
 use anyhow::Result;
 use docted::Docted;
 use web::start_server;
 use notes::exec_notes;
+use doc::get_doc;
 
 use std::{fs::{create_dir, remove_dir_all, File}, io::Write, path::{Path, PathBuf}};
 
@@ -51,7 +54,7 @@ fn main() -> Result<()>{
             remove_dir_all("./.docted")?;
             println!("Removed docted")
         },
-        Commands::Doc { item } => (),
+        Commands::Doc { item, lang } => get_doc(item, lang)?,
         Commands::Note { action } => exec_notes(action)?,
         Commands::Web => {
             tokio::runtime::Runtime::new()?.block_on(start_server())?;

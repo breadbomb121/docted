@@ -23,6 +23,8 @@ pub enum Commands {
     Doc {
         /// The format for the documentation (e.g., "html", "markdown")
         item: String,
+        #[arg(short, long, value_name = "LANG")]
+        lang: Option<String>
     },
     Remove,
     Note{
@@ -41,5 +43,8 @@ pub enum NoteAction{
     Remove{
         id: usize
     },
-    View
+    View,
+    Export {
+        location: PathBuf
+    }
 }

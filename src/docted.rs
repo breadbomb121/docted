@@ -1,7 +1,8 @@
-use std::{env::current_dir, fmt::{self, Display}, fs::{read_to_string, OpenOptions}, io::{Error, Write}, path::{Path, PathBuf}};
+use std::{env::current_dir, fmt::{self, Display}, fs::{read_to_string, File, OpenOptions}, io:: Write, path::PathBuf};
 use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Utc};
 use anyhow::{anyhow, Result};
+
 pub struct Docted {
     pub project: Project,
     pub notes: NotesFile
@@ -25,8 +26,8 @@ impl Docted {
 }
 #[derive(Serialize, Deserialize)]
 pub struct Project {
-    name: String,
-    lang: String
+    pub name: String,
+    pub lang: String
 }
 
 #[derive(Deserialize, Serialize)]
@@ -67,6 +68,15 @@ impl NotesFile {
             .truncate(true)
             .open(&dir)?;
         file.write_all(toml_string.as_bytes())?;
+        Ok(())
+    }
+    pub fn export(&self, location: PathBuf) -> Result<()> {
+        if self.entries.len() == 0 {
+            return Err(anyhow!("No Notes have been recorded"))
+        };
+        let mut file = File::create_new(&location)?;
+        file.write(self.to_string().as_bytes())?;
+        println!("Wrote Notes to {}", location.to_str().unwrap());
         Ok(())
     }
 }

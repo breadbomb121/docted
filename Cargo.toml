@@ -13,6 +13,11 @@ askama_actix = "0.14.0"
 bat = "0.24.0"
 chrono = { version = "0.4.38", features = ["serde"] }
 clap = { version = "4.5.19", features = ["derive"] }
+html2text = "0.12.6"
+scraper = "0.20.0"
 serde = { version = "1.0.210", features = ["derive"] }
+surf = "2.3.2"
+term_size = "0.3.2"
 tokio = { version = "1.40.0", features = ["full"] }
 toml = "0.8.19"
+urlencoding = "2.1.3"

@@ -25,6 +25,9 @@ pub fn exec_notes(action: NoteAction) -> Result<()> {
                 .header(true)
                 .grid(true)
         .input_from_bytes(notes.as_bytes()).print()?;
+        },
+        NoteAction::Export{location} => {
+            docted.notes.export(location)?; 
         }
     };
     Ok(())
