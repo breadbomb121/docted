@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="/static/main.css" />
+	</head>
+
+	<body>
+		<header class="p-4 border-b">
+			<h1 class="text-xl bold">Docted</h1>
+		</header>
+		<main class="mx-auto">
+			<ul>
+				{% for note in notes %}
+				<li>{{loop.index}} {{note}}
+					<form class="inline" method="post" action="/notes/remove">
+						<input type="hidden" name="index" value="{{loop.index}}"/>
+						<button class="border hover:bg-white hover:text-black">X</button>
+					</form>
+
+				</li>	
+				{% endfor %}
+			</ul>
+			<form method="post" action="/notes/add" class="inline">
+				<input class="bg-black border border-white rounded" type="text" name="note" />
+				<button class="border-white rounded hover:bg-white hover:text-black">Add</button>
+			</form>
+		</main>
+	</body>
+</html>

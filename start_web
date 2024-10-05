@@ -1,0 +1,3 @@
+#[/bin/fish]
+npx tailwindcss -i ./input.css -o ./static/main.css --watch &
+cargo run -- web
