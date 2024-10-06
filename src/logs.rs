@@ -15,14 +15,20 @@ pub fn exec_logs(action: LogAction) -> Result<()> {
             docted.logs.entries.push(log);
             docted.logs.write_env_dir()?;
         },
-        LogAction::View => {
+        LogAction::View{no_page} => {
             let logs = docted.logs.to_string();
-            PrettyPrinter::new()
-                .pager("less")
-                .paging_mode(PagingMode::QuitIfOneScreen)
-                .header(true)
-                .grid(true)
-        .input_from_bytes(logs.as_bytes()).print()?;
+            let mut printer = PrettyPrinter::new();
+                printer
+                    .pager("less")
+                    .header(true)
+                    .grid(true);
+            if no_page {
+                printer.paging_mode(PagingMode::Never);
+            }else {
+                printer.paging_mode(PagingMode::QuitIfOneScreen);
+            }
+            printer.input_from_bytes(logs.as_bytes()).print()?;
+
         },
         LogAction::Export{location} => {
             docted.notes.export(location)?; 

@@ -6,13 +6,12 @@ mod web;
 mod doc;
 
 use anyhow::Result;
-use docted::Docted;
 use logs::exec_logs;
 use web::start_server;
 use notes::exec_notes;
 use doc::get_doc;
 
-use std::{fs::{create_dir, remove_dir_all, File}, io::Write, path::{Path, PathBuf}};
+use std::{fs::{create_dir, remove_dir_all, File}, io::Write, path::PathBuf};
 
 use crate::cli::{Cli, Commands};
 use clap::Parser;
@@ -32,11 +31,12 @@ lang = "{}"
        lang.unwrap_or("".into())
     );
 
-    create_dir(&project_path)?; 
+    create_dir(&project_path)?;
+    println!("created .docted");
     project_path.push(file_name);
     let mut file = File::create(&project_path)?;
     file.write_all(content.as_bytes())?;
-    
+     
     let note_content = "entries = []";
     project_path.pop(); project_path.push("notes.toml");
     let mut notes = File::create(&project_path)?;   
@@ -61,7 +61,7 @@ fn main() -> Result<()>{
             remove_dir_all("./.docted")?;
             println!("Removed docted")
         },
-        Commands::Doc { item, lang } => get_doc(item, lang)?,
+        Commands::Doc { item, lang, no_page } => get_doc(item, lang, no_page)?,
         Commands::Note { action } => exec_notes(action)?,
         Commands::Log { action } => exec_logs(action)?,
         Commands::Web => {

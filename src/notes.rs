@@ -1,6 +1,6 @@
 use crate::cli::NoteAction;
 use crate::docted::{Docted, Note};
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use bat::{PrettyPrinter, PagingMode};
 pub fn exec_notes(action: NoteAction) -> Result<()> {
     let mut docted = Docted::from_env_dir()?; 
@@ -17,14 +17,19 @@ pub fn exec_notes(action: NoteAction) -> Result<()> {
                 notes.write_env_dir()?;
             }
         },
-        NoteAction::View => {
+        NoteAction::View{no_page} => {
             let notes = docted.notes.to_string();
-            PrettyPrinter::new()
-                .pager("less")
-                .paging_mode(PagingMode::QuitIfOneScreen)
-                .header(true)
-                .grid(true)
-        .input_from_bytes(notes.as_bytes()).print()?;
+            let mut printer = PrettyPrinter::new();
+                printer
+                    .pager("less")
+                    .header(true)
+                    .grid(true);
+            if no_page {
+                printer.paging_mode(PagingMode::Never);
+            }else {
+                printer.paging_mode(PagingMode::QuitIfOneScreen);
+            }
+            printer.input_from_bytes(notes.as_bytes()).print()?;
         },
         NoteAction::Export{location} => {
             docted.notes.export(location)?; 

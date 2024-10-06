@@ -24,7 +24,10 @@ pub enum Commands {
         /// The format for the documentation (e.g., "html", "markdown")
         item: String,
         #[arg(short, long, value_name = "LANG")]
-        lang: Option<String>
+        lang: Option<String>,
+
+        #[clap(long, short, action)]
+        no_page: bool
     },
     Remove,
     Note{
@@ -47,7 +50,10 @@ pub enum NoteAction{
     Remove{
         id: usize
     },
-    View,
+    View {
+        #[clap(long, short, action)]
+        no_page: bool
+    },
     Export {
         location: PathBuf
     }
@@ -56,7 +62,10 @@ pub enum NoteAction{
 #[derive(Clone, Subcommand)]
 pub enum LogAction{
     Add,
-    View,
+    View{
+        #[clap(long, short, action)]
+        no_page: bool
+    },
     Export {
         location: PathBuf
     }
