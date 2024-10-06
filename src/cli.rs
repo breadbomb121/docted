@@ -11,6 +11,7 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Commands {
+    ///Creates a .docted folder
     Init{
         #[arg(short, long)]
         name: Option<String>,
@@ -20,6 +21,8 @@ pub enum Commands {
         #[arg(short, long, value_name = "LANG")]
         lang: Option<String>
     },
+
+    ///Finds standard documentation
     Doc {
         /// The format for the documentation (e.g., "html", "markdown")
         item: String,
@@ -29,12 +32,16 @@ pub enum Commands {
         #[clap(long, short, action)]
         no_page: bool
     },
+    ///Removes .docted folder
     Remove,
+    ///Utility for note taking
     Note{
         #[command(subcommand)]
         action: NoteAction
     },
+    ///Web interface for note taking
     Web,
+    ///Utility for general logging
     Log{
         #[command(subcommand)]
         action: LogAction 
@@ -44,16 +51,21 @@ pub enum Commands {
 }
 #[derive(Clone, Subcommand)]
 pub enum NoteAction{
+    //Adds a new note
     Add{
         content: String
     },
+    //Removes a note
     Remove{
+        ///The id to remove
         id: usize
     },
+    ///Views all notes
     View {
         #[clap(long, short, action)]
         no_page: bool
     },
+    //Exports notes as markdown list
     Export {
         location: PathBuf
     }
@@ -61,11 +73,14 @@ pub enum NoteAction{
 
 #[derive(Clone, Subcommand)]
 pub enum LogAction{
+    ///Adds a new log from stdin
     Add,
+    ///Shows all logs
     View{
         #[clap(long, short, action)]
         no_page: bool
     },
+    ///Exports logs to path
     Export {
         location: PathBuf
     }
