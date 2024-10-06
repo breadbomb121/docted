@@ -31,7 +31,11 @@ pub enum Commands {
         #[command(subcommand)]
         action: NoteAction
     },
-    Web
+    Web,
+    Log{
+        #[command(subcommand)]
+        action: LogAction 
+    }
     
     
 }
@@ -48,3 +52,16 @@ pub enum NoteAction{
         location: PathBuf
     }
 }
+
+#[derive(Clone, Subcommand)]
+pub enum LogAction{
+    Add,
+    View,
+    Export {
+        location: PathBuf
+    }
+}
+
+
+
+

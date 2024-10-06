@@ -1,6 +1,3 @@
-[[entries]]
-timestamp = "2024-10-06T00:42:48.059830785Z"
-content = '''
 use std::io::{Read, stdin};
 
 use crate::cli::LogAction;
@@ -14,18 +11,18 @@ pub fn exec_logs(action: LogAction) -> Result<()> {
         LogAction::Add  => {
             let mut buf = String::new();
             stdin().read_to_string(&mut buf)?;
-            let note = Log::new(buf);
-            docted.logs.entries.push(note);
+            let log= Log::new(buf);
+            docted.logs.entries.push(log);
             docted.logs.write_env_dir()?;
         },
         LogAction::View => {
-            let notes = docted.notes.to_string();
+            let logs = docted.logs.to_string();
             PrettyPrinter::new()
                 .pager("less")
                 .paging_mode(PagingMode::QuitIfOneScreen)
                 .header(true)
                 .grid(true)
-        .input_from_bytes(notes.as_bytes()).print()?;
+        .input_from_bytes(logs.as_bytes()).print()?;
         },
         LogAction::Export{location} => {
             docted.notes.export(location)?; 
@@ -33,4 +30,3 @@ pub fn exec_logs(action: LogAction) -> Result<()> {
     };
     Ok(())
 } 
-'''

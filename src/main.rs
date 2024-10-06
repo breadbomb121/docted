@@ -1,4 +1,5 @@
 mod notes;
+mod logs;
 mod cli;
 mod docted;
 mod web;
@@ -6,6 +7,7 @@ mod doc;
 
 use anyhow::Result;
 use docted::Docted;
+use logs::exec_logs;
 use web::start_server;
 use notes::exec_notes;
 use doc::get_doc;
@@ -39,6 +41,11 @@ lang = "{}"
     project_path.pop(); project_path.push("notes.toml");
     let mut notes = File::create(&project_path)?;   
     notes.write_all(&note_content.as_bytes())?;
+    
+    let log_content = "entries = []";
+    project_path.pop(); project_path.push("logs.toml");
+    let mut logs= File::create(&project_path)?;   
+    logs.write_all(&log_content.as_bytes())?;
    Ok(())
 
 }
@@ -56,6 +63,7 @@ fn main() -> Result<()>{
         },
         Commands::Doc { item, lang } => get_doc(item, lang)?,
         Commands::Note { action } => exec_notes(action)?,
+        Commands::Log { action } => exec_logs(action)?,
         Commands::Web => {
             tokio::runtime::Runtime::new()?.block_on(start_server())?;
         }
