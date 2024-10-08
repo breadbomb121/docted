@@ -21,7 +21,7 @@ pub enum Commands {
         #[arg(short, long, value_name = "LANG")]
         lang: Option<String>
     },
-
+    Tui,
     ///Finds standard documentation
     Doc {
         /// The format for the documentation (e.g., "html", "markdown")
@@ -39,8 +39,6 @@ pub enum Commands {
         #[command(subcommand)]
         action: NoteAction
     },
-    ///Web interface for note taking
-    Web,
     ///Utility for general logging
     Log{
         #[command(subcommand)]

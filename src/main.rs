@@ -1,15 +1,12 @@
-mod notes;
-mod logs;
-mod cli;
 mod docted;
-mod web;
-mod doc;
+mod cli;
+mod tui;
 
 use anyhow::Result;
-use logs::exec_logs;
-use web::start_server;
-use notes::exec_notes;
-use doc::get_doc;
+use docted::logs::exec_logs;
+use docted::notes::exec_notes;
+use docted::doc::get_doc;
+use tui::start_tui;
 
 use std::{fs::{create_dir, remove_dir_all, File}, io::Write, path::PathBuf};
 
@@ -56,7 +53,10 @@ fn main() -> Result<()>{
     match cli.command {
         Commands::Init{name, path, lang} => {
             init_project(name, path, lang)?;
-        }
+        },
+        Commands::Tui => {
+            tokio::runtime::Runtime::new()?.block_on(start_tui())?;
+        },
         Commands::Remove => {
             remove_dir_all("./.docted")?;
             println!("Removed docted")
@@ -64,9 +64,6 @@ fn main() -> Result<()>{
         Commands::Doc { item, lang, no_page } => get_doc(item, lang, no_page)?,
         Commands::Note { action } => exec_notes(action)?,
         Commands::Log { action } => exec_logs(action)?,
-        Commands::Web => {
-            tokio::runtime::Runtime::new()?.block_on(start_server())?;
-        }
     };
     Ok(())
 }

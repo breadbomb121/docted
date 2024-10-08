@@ -1,3 +1,7 @@
+pub mod doc;
+pub mod logs;
+pub mod notes;
+
 use std::{env::current_dir, fmt::{self, Display}, fs::{read_to_string, File, OpenOptions}, io:: Write, path::PathBuf};
 use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Utc};
@@ -26,6 +30,9 @@ impl Docted {
         
         
         Ok(Self {project, notes, logs})
+    }
+    pub fn add_note(&mut self, content: String) -> Result<()> {
+        self.notes.add_and_write(content)
     }
 }
 #[derive(Serialize, Deserialize)]
@@ -83,6 +90,19 @@ impl NotesFile {
         println!("Wrote Notes to {}", location.to_str().unwrap());
         Ok(())
     }
+    pub fn add_and_write(&mut self, content: String) -> Result<()> {
+        let new_note = Note::new(content);
+        self.entries.push(new_note);
+        self.write_env_dir();
+        Ok(())
+    }
+    pub fn edit(&mut self, index: usize, new_note: String) -> Result<()>{
+        let note: &mut Note = self.entries.get_mut(index)
+            .ok_or(anyhow!("Unable to write note at {}", index))?;
+        *note = Note::new(new_note);
+        
+        Ok(())
+    } 
 }
 
 impl Display for NotesFile {
